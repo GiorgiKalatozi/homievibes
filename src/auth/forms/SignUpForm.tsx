@@ -11,17 +11,17 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import * as z from "zod";
-
-const formSchema = z.object({
-  username: z.string().min(2).max(50),
-});
+import { SignUpValidation } from "@/lib/validation";
+import { z } from "zod";
 
 export default function SignUpForm() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof SignUpValidation>>({
+    resolver: zodResolver(SignUpValidation),
     defaultValues: {
+      name: "",
       username: "",
+      email: "",
+      password: "",
     },
   });
 
