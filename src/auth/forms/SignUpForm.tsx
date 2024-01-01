@@ -15,6 +15,7 @@ import { SignUpValidation } from "@/lib/validation";
 import { z } from "zod";
 import { Link } from "react-router-dom";
 import Loader from "@/components/shared/loader";
+import { createUserAccount } from "@/lib/services/api";
 
 export default function SignUpForm() {
   const isLoading = false;
@@ -34,9 +35,8 @@ export default function SignUpForm() {
 
   const handleSignup = async (user: z.infer<typeof SignUpValidation>) => {
     try {
-      console.log(user);
-
-      // const newUser = await createUserAccount(user);
+      const newUser = await createUserAccount(user);
+      console.log(newUser);
       // if (!newUser) {
       //   toast({ title: "Sign up failed. Please try again." });
       //   return;
@@ -90,7 +90,7 @@ export default function SignUpForm() {
                 <FormControl>
                   <Input type="text" className="shad-input" {...field} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-rose-500" />
               </FormItem>
             )}
           />
@@ -104,7 +104,7 @@ export default function SignUpForm() {
                 <FormControl>
                   <Input type="text" className="shad-input" {...field} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-rose-500" />
               </FormItem>
             )}
           />
@@ -118,7 +118,7 @@ export default function SignUpForm() {
                 <FormControl>
                   <Input type="text" className="shad-input" {...field} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-rose-500" />
               </FormItem>
             )}
           />
@@ -132,7 +132,7 @@ export default function SignUpForm() {
                 <FormControl>
                   <Input type="password" className="shad-input" {...field} />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-rose-500" />
               </FormItem>
             )}
           />
