@@ -1,4 +1,4 @@
-# Homie Vibes
+# Homie Vibes 🏡🪐🕺
 
 [![License](https://img.shields.io/github/license/giorgikalatozi/homievibes)](https://github.com/giorgikalatozi/homievibes)
 [![Issues](https://img.shields.io/github/issues/giorgikalatozi/homievibes)](https://github.com/giorgkalatozi/homievibes/issues)
