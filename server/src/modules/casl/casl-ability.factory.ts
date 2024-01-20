@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Action } from 'src/common/enums';
-import { Post } from '../posts/entities/post.entity';
-import { User } from '../users/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 import {
   AbilityClass,
   PureAbility,
@@ -9,6 +8,7 @@ import {
   AbilityBuilder,
   ExtractSubjectType,
 } from '@casl/ability';
+import { Post } from '../posts/entities/post.entity';
 
 type Subjects = InferSubjects<typeof Post | typeof User> | 'all';
 

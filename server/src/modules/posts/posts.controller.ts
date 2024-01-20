@@ -1,21 +1,25 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  UsePipes,
 } from '@nestjs/common';
-import { PostsService } from './posts.service';
+import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 import { CreatePostDto } from './dtos/create-post.dto';
 import { UpdatePostDto } from './dtos/update-post.dto';
+import { PostsService } from './posts.service';
+import { createPostSchema } from './schemas/create-post.schema';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Post()
+  @UsePipes(new JoiValidationPipe(createPostSchema))
   create(@Body() createPostDto: CreatePostDto) {
     return this.postsService.create(createPostDto);
   }
