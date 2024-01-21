@@ -10,13 +10,19 @@ import { PostsModule } from './posts/posts.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import typeorm from '../config/typeorm.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { configValidationSchema } from 'src/config';
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [typeorm] }),
+    ConfigModule.forRoot({
+      envFilePath: ['.env'],
+      isGlobal: true,
+      load: [typeorm],
+      validationSchema: configValidationSchema,
+    }),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) =>
-        configService.get('typeorm'),
+        configService.getOrThrow('typeorm'),
     }),
     AuthModule,
     UsersModule,
