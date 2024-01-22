@@ -22,8 +22,8 @@ export class Post {
   @JoinColumn({ name: 'author_id' })
   author: User;
 
-  @Column({ name: 'author_id', nullable: false })
-  authorId: string;
+  @Column({ name: 'userId', nullable: false })
+  userId: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

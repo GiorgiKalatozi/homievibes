@@ -1,16 +1,15 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './auth/auth.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { RolesGuard } from 'src/common/guards/role.guard';
+import { configValidationSchema } from 'src/config';
+import typeorm from '../config/typeorm.config';
+import { AuthModule } from './auth/auth.module';
 import { CaslModule } from './casl/casl.module';
 import { CommentsModule } from './comments/comment.module';
-import { UsersModule } from './users/users.module';
-import { UsersService } from './users/users.service';
 import { PostsModule } from './posts/posts.module';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import typeorm from '../config/typeorm.config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { configValidationSchema } from 'src/config';
+import { UsersModule } from './users/users.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -32,7 +31,6 @@ import { configValidationSchema } from 'src/config';
   ],
   controllers: [],
   providers: [
-    UsersService,
     {
       provide: APP_GUARD,
       useClass: RolesGuard,

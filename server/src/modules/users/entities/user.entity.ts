@@ -18,6 +18,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ default: false })
+  isAdmin: boolean;
+
   @OneToMany(() => Post, (post) => post.author)
   posts: Post[];
 }
