@@ -1,13 +1,17 @@
-import { Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, UsePipes } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { SignUpDto } from './dtos';
+import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
+import { signUpSchema } from './schemas/sign-up.schema';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/local/signup')
-  public signUp(): void {
-    this.authService.signUp();
+  @UsePipes(new JoiValidationPipe(signUpSchema))
+  public signUp(@Body() signUpDto: SignUpDto): void {
+    this.authService.signUp(signUpDto);
   }
   @Post('/local/signin')
   public signIn(): void {
