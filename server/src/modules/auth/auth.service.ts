@@ -40,7 +40,7 @@ export class AuthService {
     return bcrypt.hash(data, 10);
   }
 
-  private async getTokens(userId: string, email: string): Promise<Tokens> {
+  private async getTokens(userId: number, email: string): Promise<Tokens> {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
@@ -70,7 +70,7 @@ export class AuthService {
     };
   }
 
-  private async updateRefreshToken(userId: string, refreshToken: string) {
+  private async updateRefreshToken(userId: number, refreshToken: string) {
     const hash = await this.hashData(refreshToken);
     await this.usersRepository
       .createQueryBuilder()
