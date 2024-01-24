@@ -25,20 +25,20 @@ export class UsersController {
   }
 
   @Get(':id')
-  public async findOne(@Param('id') id: string): Promise<User> {
+  public async findOne(@Param('id') id: number): Promise<User> {
     return await this.usersService.findOne(id);
   }
 
   @Patch()
   public async update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() user: User,
   ): Promise<User> {
     return await this.update(id, user);
   }
 
   @Delete()
-  public async remove(@Param('id') id: string): Promise<void> {
+  public async remove(@Param('id') id: number): Promise<void> {
     return this.usersService.remove(id);
   }
 }
