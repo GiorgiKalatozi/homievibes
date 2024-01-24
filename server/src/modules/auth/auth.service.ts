@@ -4,6 +4,8 @@ import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { SignUpDto } from './dtos';
+import * as bcrypt from 'bcrypt';
+import { Tokens } from './types';
 
 @Injectable()
 export class AuthService {
@@ -13,12 +15,13 @@ export class AuthService {
     private readonly usersService: UsersService,
   ) {}
 
-  public async signUp(@Body() signUpDto: SignUpDto) {
+  public async signUp(@Body() signUpDto: SignUpDto): Promise<Tokens> {
     const { email, username, password } = signUpDto;
+    const hashedPassword = await this.hashData(password);
     const newUser = this.usersRepository.create({
       email,
       username,
-      password,
+      password: hashedPassword,
     });
     return await this.usersRepository.save(newUser);
   }
@@ -26,4 +29,8 @@ export class AuthService {
   public signIn() {}
   public signOut() {}
   public refreshTokens() {}
+
+  private hashData(data: string) {
+    return bcrypt.hash(data, 10);
+  }
 }

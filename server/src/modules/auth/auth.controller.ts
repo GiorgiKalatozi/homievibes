@@ -3,6 +3,7 @@ import { AuthService } from './auth.service';
 import { SignUpDto } from './dtos';
 import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 import { signUpSchema } from './schemas/sign-up.schema';
+import { Tokens } from './types';
 
 @Controller('auth')
 export class AuthController {
@@ -10,8 +11,8 @@ export class AuthController {
 
   @Post('/local/signup')
   @UsePipes(new JoiValidationPipe(signUpSchema))
-  public signUp(@Body() signUpDto: SignUpDto): void {
-    this.authService.signUp(signUpDto);
+  public signUp(@Body() signUpDto: SignUpDto): Promise<Tokens> {
+    return this.authService.signUp(signUpDto);
   }
   @Post('/local/signin')
   public signIn(): void {
