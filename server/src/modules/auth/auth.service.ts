@@ -6,12 +6,14 @@ import { UsersService } from '../users/users.service';
 import { SignUpDto } from './dtos';
 import * as bcrypt from 'bcrypt';
 import { Tokens } from './types';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private jwtService: JwtService,
     private readonly usersService: UsersService,
   ) {}
 
@@ -23,7 +25,11 @@ export class AuthService {
       username,
       password: hashedPassword,
     });
-    return await this.usersRepository.save(newUser);
+
+    const tokens = await this.getTokens(newUser.id, newUser.email);
+    await this.updateRefreshToken(newUser.id, tokens.refresh_token);
+    await this.usersRepository.save(newUser);
+    return tokens;
   }
 
   public signIn() {}
@@ -32,5 +38,45 @@ export class AuthService {
 
   private hashData(data: string) {
     return bcrypt.hash(data, 10);
+  }
+
+  private async getTokens(userId: string, email: string): Promise<Tokens> {
+    const [accessToken, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          email,
+        },
+        {
+          secret: 'at-secret',
+          expiresIn: 60 * 15,
+        },
+      ),
+      this.jwtService.signAsync(
+        {
+          sub: userId,
+          email,
+        },
+        {
+          secret: 'rt-secret',
+          expiresIn: 60 * 60 * 24 * 7,
+        },
+      ),
+    ]);
+
+    return {
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    };
+  }
+
+  private async updateRefreshToken(userId: string, refreshToken: string) {
+    const hash = await this.hashData(refreshToken);
+    await this.usersRepository
+      .createQueryBuilder()
+      .update()
+      .set({ refreshToken: hash })
+      .where('id = :userId', { userId })
+      .execute();
   }
 }
