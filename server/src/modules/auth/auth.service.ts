@@ -27,8 +27,8 @@ export class AuthService {
     });
 
     const tokens = await this.getTokens(newUser.id, newUser.email);
-    await this.updateRefreshToken(newUser.id, tokens.refresh_token);
     await this.usersRepository.save(newUser);
+    await this.updateRefreshToken(newUser.id, tokens.refresh_token);
     return tokens;
   }
 
@@ -47,14 +47,37 @@ export class AuthService {
     return tokens;
   }
 
-  public async signOut(userId: number) {
+  public async signOut(userId: number): Promise<void> {
     const user = await this.usersRepository.findOne({ where: { id: userId } });
 
     user.refreshToken = null;
 
     await this.usersRepository.save(user);
   }
-  public refreshTokens(userId: number, refreshToken: string) {}
+  public async refreshTokens(
+    userId: number,
+    refreshToken: string,
+  ): Promise<Tokens> {
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+
+    if (!user) {
+      throw new ForbiddenException('Access Denied.');
+    }
+
+    const refreshTokenMatches = await bcrypt.compare(
+      refreshToken,
+      user.refreshToken,
+    );
+
+    if (!refreshTokenMatches) {
+      throw new ForbiddenException('Access Denied.');
+    }
+
+    const tokens = await this.getTokens(user.id, user.email);
+    await this.updateRefreshToken(user.id, tokens.refresh_token);
+
+    return tokens;
+  }
 
   private hashData(data: string) {
     return bcrypt.hash(data, 10);
