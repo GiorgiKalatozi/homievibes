@@ -42,11 +42,11 @@ export class AuthService {
     if (!passwordMatches) throw new ForbiddenException('Access Denied.');
 
     const tokens = await this.getTokens(user.id, user.email);
-    await this.updateRefreshToken(user.id, tokens.refresh_token);
     await this.usersRepository.save(user);
+    await this.updateRefreshToken(user.id, tokens.refresh_token);
     return tokens;
   }
-  public signOut() {}
+  public signOut(): void {}
   public refreshTokens() {}
 
   private hashData(data: string) {
@@ -83,13 +83,16 @@ export class AuthService {
     };
   }
 
-  private async updateRefreshToken(userId: number, refreshToken: string) {
+  private async updateRefreshToken(
+    userId: number,
+    refreshToken: string,
+  ): Promise<void> {
     const hash = await this.hashData(refreshToken);
-    await this.usersRepository
-      .createQueryBuilder()
-      .update()
-      .set({ refreshToken: hash })
-      .where('id = :userId', { userId })
-      .execute();
+
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+
+    user.refreshToken = hash;
+
+    await this.usersRepository.save(user);
   }
 }

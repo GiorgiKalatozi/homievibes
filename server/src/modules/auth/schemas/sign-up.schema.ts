@@ -6,18 +6,12 @@ const emailSchema = Joi.string().email().required().messages({
   'any.required': 'Email is required',
 });
 
-const usernameSchema = Joi.string()
-  .alphanum()
-  .min(3)
-  .max(30)
-  .required()
-  .messages({
-    'string.base': 'Username must be a string',
-    'string.alphanum': 'Username must only contain alphanumeric characters',
-    'string.min': 'Username must be at least 3 characters long',
-    'string.max': 'Username must not exceed 30 characters',
-    'any.required': 'Username is required',
-  });
+const usernameSchema = Joi.string().min(3).max(30).required().messages({
+  'string.base': 'Username must be a string',
+  'string.min': 'Username must be at least 3 characters long',
+  'string.max': 'Username must not exceed 30 characters',
+  'any.required': 'Username is required',
+});
 
 const passwordSchema = Joi.string().min(8).required().messages({
   'string.base': 'Password must be a string',
