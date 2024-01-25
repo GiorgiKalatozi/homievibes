@@ -8,8 +8,8 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
+import { AccessTokenGuard, RefreshTokenGuard } from 'src/common/guards';
 import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 import { AuthService } from './auth.service';
 import { SignInDto, SignUpDto } from './dtos';
@@ -34,7 +34,7 @@ export class AuthController {
     return this.authService.signIn(signInDto);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  @UseGuards(AccessTokenGuard)
   @Post('/signout')
   @HttpCode(HttpStatus.OK)
   public signOut(@Req() req: Request) {
@@ -42,7 +42,7 @@ export class AuthController {
     return this.authService.signOut(user['sub']);
   }
 
-  @UseGuards(AuthGuard('jwt-refresh'))
+  @UseGuards(RefreshTokenGuard)
   @Post('/refresh')
   @HttpCode(HttpStatus.OK)
   public refreshTokens(@Req() req: Request) {
