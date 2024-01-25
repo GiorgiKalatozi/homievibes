@@ -1,6 +1,6 @@
 import { Body, Controller, Post, UsePipes } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { SignUpDto } from './dtos';
+import { SignInDto, SignUpDto } from './dtos';
 import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 import { signUpSchema } from './schemas/sign-up.schema';
 import { Tokens } from './types';
@@ -14,10 +14,12 @@ export class AuthController {
   public signUp(@Body() signUpDto: SignUpDto): Promise<Tokens> {
     return this.authService.signUp(signUpDto);
   }
+
   @Post('/local/signin')
-  public signIn(): void {
-    this.authService.signIn();
+  public signIn(@Body() signInDto: SignInDto): Promise<Tokens> {
+    return this.authService.signIn(signInDto);
   }
+
   @Post('/signout')
   public signOut(): void {
     this.authService.signOut();

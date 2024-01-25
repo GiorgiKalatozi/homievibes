@@ -1,9 +1,9 @@
-import { Body, Injectable } from '@nestjs/common';
+import { Body, ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
-import { SignUpDto } from './dtos';
+import { SignInDto, SignUpDto } from './dtos';
 import * as bcrypt from 'bcrypt';
 import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
@@ -32,7 +32,20 @@ export class AuthService {
     return tokens;
   }
 
-  public signIn() {}
+  public async signIn(signInDto: SignInDto): Promise<Tokens> {
+    const { email, password } = signInDto;
+    const user = await this.usersRepository.findOne({ where: { email } });
+
+    if (!user) throw new ForbiddenException('Access Denied.');
+
+    const passwordMatches = await bcrypt.compare(password, user.password);
+    if (!passwordMatches) throw new ForbiddenException('Access Denied.');
+
+    const tokens = await this.getTokens(user.id, user.email);
+    await this.updateRefreshToken(user.id, tokens.refresh_token);
+    await this.usersRepository.save(user);
+    return tokens;
+  }
   public signOut() {}
   public refreshTokens() {}
 
