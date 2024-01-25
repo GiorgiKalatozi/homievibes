@@ -1,4 +1,15 @@
-import { Body, Controller, Post, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { Request } from 'express';
 import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 import { AuthService } from './auth.service';
 import { SignInDto, SignUpDto } from './dtos';
@@ -11,23 +22,31 @@ export class AuthController {
 
   @Post('/local/signup')
   @UsePipes(new JoiValidationPipe(signUpSchema))
+  @HttpCode(HttpStatus.CREATED)
   public signUp(@Body() signUpDto: SignUpDto): Promise<Tokens> {
     return this.authService.signUp(signUpDto);
   }
 
   @Post('/local/signin')
   @UsePipes(new JoiValidationPipe(signInSchema))
+  @HttpCode(HttpStatus.OK)
   public signIn(@Body() signInDto: SignInDto): Promise<Tokens> {
     return this.authService.signIn(signInDto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('/signout')
-  public signOut(): void {
-    this.authService.signOut();
+  @HttpCode(HttpStatus.OK)
+  public signOut(@Req() req: Request) {
+    const user = req.user;
+    return this.authService.signOut(user['sub']);
   }
 
+  @UseGuards(AuthGuard('jwt-refresh'))
   @Post('/refresh')
-  public refreshTokens(): void {
-    this.authService.refreshTokens();
+  @HttpCode(HttpStatus.OK)
+  public refreshTokens(@Req() req: Request): void {
+    const user = req.user;
+    return this.authService.refreshTokens(user['id'], user['refreshToken']);
   }
 }

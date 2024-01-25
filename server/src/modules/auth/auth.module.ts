@@ -6,10 +6,18 @@ import { UsersService } from '../users/users.service';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
+import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, UsersService, LocalStrategy, UsersService],
+  providers: [
+    AuthService,
+    UsersService,
+    LocalStrategy,
+    UsersService,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
+  ],
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.register({

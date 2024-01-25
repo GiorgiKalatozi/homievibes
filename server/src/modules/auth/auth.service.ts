@@ -46,8 +46,15 @@ export class AuthService {
     await this.updateRefreshToken(user.id, tokens.refresh_token);
     return tokens;
   }
-  public signOut(): void {}
-  public refreshTokens() {}
+
+  public async signOut(userId: number) {
+    const user = await this.usersRepository.findOne({ where: { id: userId } });
+
+    user.refreshToken = null;
+
+    await this.usersRepository.save(user);
+  }
+  public refreshTokens(userId: number, refreshToken: string) {}
 
   private hashData(data: string) {
     return bcrypt.hash(data, 10);
