@@ -4,11 +4,10 @@ import {
   HttpCode,
   HttpStatus,
   Post,
-  Req,
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { Request } from 'express';
+import { GetCurrentUser, GetCurrentUserId } from 'src/common/decorators';
 import { AccessTokenGuard, RefreshTokenGuard } from 'src/common/guards';
 import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 import { AuthService } from './auth.service';
@@ -37,17 +36,17 @@ export class AuthController {
   @UseGuards(AccessTokenGuard)
   @Post('/signout')
   @HttpCode(HttpStatus.OK)
-  public signOut(@Req() req: Request) {
-    const user = req.user;
-    return this.authService.signOut(user['sub']);
+  public async signOut(@GetCurrentUserId() userId: number): Promise<void> {
+    return await this.authService.signOut(userId);
   }
 
   @UseGuards(RefreshTokenGuard)
   @Post('/refresh')
   @HttpCode(HttpStatus.OK)
-  public refreshTokens(@Req() req: Request) {
-    const user = req.user;
-    console.log({ user });
-    return this.authService.refreshTokens(user['sub'], user['refreshToken']);
+  public refreshTokens(
+    @GetCurrentUserId() userId: number,
+    @GetCurrentUser('refreshToken') refreshToken: string,
+  ): Promise<Tokens> {
+    return this.authService.refreshTokens(userId, refreshToken);
   }
 }
