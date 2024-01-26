@@ -74,6 +74,7 @@ export class AuthService {
     }
 
     const tokens = await this.getTokens(user.id, user.email);
+
     await this.updateRefreshToken(user.id, tokens.refresh_token);
 
     return tokens;
