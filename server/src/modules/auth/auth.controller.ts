@@ -7,8 +7,12 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { GetCurrentUser, GetCurrentUserId } from 'src/common/decorators';
-import { AccessTokenGuard, RefreshTokenGuard } from 'src/common/guards';
+import {
+  GetCurrentUser,
+  GetCurrentUserId,
+  Public,
+} from 'src/common/decorators';
+import { RefreshTokenGuard } from 'src/common/guards';
 import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 import { AuthService } from './auth.service';
 import { SignInDto, SignUpDto } from './dtos';
@@ -17,8 +21,9 @@ import { Tokens } from './types';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('/local/signup')
   @UsePipes(new JoiValidationPipe(signUpSchema))
   @HttpCode(HttpStatus.CREATED)
@@ -26,6 +31,7 @@ export class AuthController {
     return this.authService.signUp(signUpDto);
   }
 
+  @Public()
   @Post('/local/signin')
   @UsePipes(new JoiValidationPipe(signInSchema))
   @HttpCode(HttpStatus.OK)
@@ -33,13 +39,13 @@ export class AuthController {
     return this.authService.signIn(signInDto);
   }
 
-  @UseGuards(AccessTokenGuard)
   @Post('/signout')
   @HttpCode(HttpStatus.OK)
-  public async signOut(@GetCurrentUserId() userId: number): Promise<void> {
-    return await this.authService.signOut(userId);
+  public signOut(@GetCurrentUserId() userId: number): Promise<void> {
+    return this.authService.signOut(userId);
   }
 
+  @Public()
   @UseGuards(RefreshTokenGuard)
   @Post('/refresh')
   @HttpCode(HttpStatus.OK)

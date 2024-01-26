@@ -1,19 +1,19 @@
 import { Body, ForbiddenException, Injectable } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { SignInDto, SignUpDto } from './dtos';
-import * as bcrypt from 'bcrypt';
 import { Tokens } from './types';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
-    private jwtService: JwtService,
+    private readonly usersRepository: Repository<User>,
+    private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
   ) {}
 

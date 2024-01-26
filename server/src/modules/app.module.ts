@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AccessTokenGuard } from 'src/common/guards';
 import { RolesGuard } from 'src/common/guards/role.guard';
 import { configValidationSchema } from 'src/config';
 import typeorm from '../config/typeorm.config';
@@ -34,6 +35,10 @@ import { UsersModule } from './users/users.module';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: AccessTokenGuard,
     },
   ],
 })
