@@ -4,7 +4,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Repository } from 'typeorm';
 import { User } from '../users/entities/user.entity';
-import { UsersService } from '../users/users.service';
 import { SignInDto, SignUpDto } from './dtos';
 import { Tokens } from './types';
 
@@ -14,7 +13,6 @@ export class AuthService {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
     private readonly jwtService: JwtService,
-    private readonly usersService: UsersService,
   ) {}
 
   public async signUp(@Body() signUpDto: SignUpDto): Promise<Tokens> {
@@ -60,7 +58,7 @@ export class AuthService {
   ): Promise<Tokens> {
     const user = await this.usersRepository.findOne({ where: { id: userId } });
 
-    if (!user) {
+    if (!user || !user.refreshToken) {
       throw new ForbiddenException('Access Denied.');
     }
 
