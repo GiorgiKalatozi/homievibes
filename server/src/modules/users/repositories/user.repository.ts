@@ -8,7 +8,7 @@ export class UsersRepository {
   constructor(
     @InjectRepository(User) private readonly usersRepository: Repository<User>,
   ) {}
-  public async create(user: User): Promise<User> {
+  public async create(user: Partial<User>): Promise<User> {
     const newUser = this.usersRepository.create(user);
     return await this.usersRepository.save(newUser);
   }
@@ -24,6 +24,9 @@ export class UsersRepository {
   public async findOneWithUsername(username: string): Promise<User> {
     return await this.usersRepository.findOne({ where: { email: username } });
   }
+  public async findOneWithEmail(email: string): Promise<User> {
+    return await this.usersRepository.findOne({ where: { email: email } });
+  }
 
   public async update(id: number, user: User): Promise<User> {
     const userToUpdate = await this.usersRepository.findOne({ where: { id } });
@@ -32,6 +35,10 @@ export class UsersRepository {
     }
     await this.usersRepository.update(id, user);
     return userToUpdate;
+  }
+
+  public async save(user: Partial<User>): Promise<User> {
+    return await this.usersRepository.save(user);
   }
 
   public async remove(id: number): Promise<void> {

@@ -4,9 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/entities/user.entity';
 import { UsersService } from '../users/users.service';
 import { AuthController } from './auth.controller';
-import { LocalStrategy } from './strategies/local.strategy';
-import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
 import { AuthService } from './auth.service';
+import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
+import { LocalStrategy } from './strategies/local.strategy';
+import { UsersRepository } from '../users/repositories/user.repository';
 
 @Module({
   controllers: [AuthController],
@@ -17,6 +18,7 @@ import { AuthService } from './auth.service';
     UsersService,
     AccessTokenStrategy,
     RefreshTokenStrategy,
+    UsersRepository,
   ],
   imports: [
     TypeOrmModule.forFeature([User]),
