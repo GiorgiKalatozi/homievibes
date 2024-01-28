@@ -7,7 +7,7 @@ import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
 import { LocalStrategy } from './strategies/local.strategy';
-import { UsersRepository } from '../users/repositories/user.repository';
+import { UsersRepository } from '../users/repositories/users.repository';
 
 @Module({
   controllers: [AuthController],

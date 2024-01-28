@@ -1,7 +1,7 @@
 import { Body, ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { UsersRepository } from '../users/repositories/user.repository';
+import { UsersRepository } from '../users/repositories/users.repository';
 import { SignInDto, SignUpDto } from './dtos';
 import { Tokens } from './types';
 
