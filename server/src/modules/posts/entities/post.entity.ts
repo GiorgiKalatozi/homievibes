@@ -1,9 +1,16 @@
 import { Comment } from 'src/modules/comments/entities/comment.entity';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/modules/users/entities/user.entity';
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class Post {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column()
@@ -11,6 +18,9 @@ export class Post {
 
   @Column()
   content: string;
+
+  @ManyToOne(() => User, (user) => user.posts)
+  user: User;
 
   @OneToMany(() => Comment, (comment) => comment.post)
   comments: Comment[];

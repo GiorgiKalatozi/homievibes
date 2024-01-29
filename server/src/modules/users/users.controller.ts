@@ -9,12 +9,15 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
+import { Roles } from 'src/common/decorators';
+import { Role } from 'src/common/enums';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @Roles(Role.Admin)
   public create(user: User): Promise<User> {
     return this.usersService.create(user);
   }
@@ -30,11 +33,13 @@ export class UsersController {
   }
 
   @Patch()
+  @Roles(Role.Admin)
   public update(@Param('id') id: number, @Body() user: User): Promise<User> {
     return this.update(id, user);
   }
 
   @Delete()
+  @Roles(Role.Admin)
   public remove(@Param('id') id: number): Promise<void> {
     return this.usersService.remove(id);
   }

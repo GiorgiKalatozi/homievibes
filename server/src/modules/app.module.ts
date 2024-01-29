@@ -7,7 +7,6 @@ import { RolesGuard } from 'src/common/guards/role.guard';
 import { configValidationSchema } from 'src/config';
 import typeorm from '../config/typeorm.config';
 import { AuthModule } from './auth/auth.module';
-import { CaslModule } from './casl/casl.module';
 import { CommentsModule } from './comments/comment.module';
 import { PostsModule } from './posts/posts.module';
 import { UsersModule } from './users/users.module';
@@ -27,7 +26,6 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     UsersModule,
     PostsModule,
-    CaslModule,
     CommentsModule,
   ],
   controllers: [],

@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { Post } from '../entities/post.entity';
-import { Repository } from 'typeorm';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Post } from '../entities/post.entity';
 
 @Injectable()
 export class PostsRepository {
@@ -9,9 +9,9 @@ export class PostsRepository {
     @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
   ) {}
 
-  public async create(user: Post): Promise<Post> {
-    const newUser = this.postsRepository.create(user);
-    return await this.postsRepository.save(newUser);
+  public async create(post: Post): Promise<Post> {
+    const newPost = this.postsRepository.create(post);
+    return this.postsRepository.save(newPost);
   }
 
   public async findAll(): Promise<Post[]> {
@@ -20,5 +20,14 @@ export class PostsRepository {
 
   public async findOne(id: number): Promise<Post> {
     return await this.postsRepository.findOne({ where: { id } });
+  }
+
+  public async update(id: number, post: Post): Promise<Post> {
+    const postToUpdate = await this.postsRepository.findOne({ where: { id } });
+    if (!postToUpdate) {
+      throw new NotFoundException(`Post with ID ${id} not found`);
+    }
+    await this.postsRepository.update(id, post);
+    return postToUpdate;
   }
 }

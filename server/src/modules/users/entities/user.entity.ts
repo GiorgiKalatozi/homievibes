@@ -1,9 +1,11 @@
+import { Role } from 'src/common/enums';
 import { Comment } from 'src/modules/comments/entities/comment.entity';
+import { Post } from 'src/modules/posts/entities/post.entity';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @Column({ unique: true, nullable: false })
@@ -18,11 +20,14 @@ export class User {
   @Column({ nullable: true })
   refreshToken: string;
 
-  @Column({ default: false })
-  isAdmin: boolean;
+  @Column({ type: 'enum', enum: Role, default: Role.User })
+  role: Role;
 
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
+
+  @OneToMany(() => Post, (post) => post.comments)
+  posts: Post[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
