@@ -9,8 +9,8 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
+import { CreatePostDto } from './dtos/create-post.dto';
 import { UpdatePostDto } from './dtos/update-post.dto';
-import { Post as PostEntity } from './entities/post.entity';
 import { PostsService } from './posts.service';
 import { createPostSchema } from './schemas/create-post.schema';
 
@@ -20,8 +20,8 @@ export class PostsController {
 
   @Post()
   @UsePipes(new JoiValidationPipe(createPostSchema))
-  create(@Body() post: PostEntity) {
-    return this.postsService.create(post);
+  public create(@Body() createPostDto: CreatePostDto): Promise<CreatePostDto> {
+    return this.postsService.create(createPostDto);
   }
 
   @Get()

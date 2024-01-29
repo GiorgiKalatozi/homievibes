@@ -30,15 +30,12 @@ export class UsersRepository {
 
   public async update(id: number, user: User): Promise<User> {
     const userToUpdate = await this.usersRepository.findOne({ where: { id } });
-    if (!userToUpdate) {
-      throw new NotFoundException(`User with ID ${id} not found`);
-    }
     await this.usersRepository.update(id, user);
     return userToUpdate;
   }
 
-  public async save(user: Partial<User>): Promise<User> {
-    return await this.usersRepository.save(user);
+  public save(user: Partial<User>): Promise<User> {
+    return this.usersRepository.save(user);
   }
 
   public async remove(id: number): Promise<void> {

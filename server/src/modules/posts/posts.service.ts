@@ -1,21 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { CreatePostDto } from './dtos/create-post.dto';
 import { UpdatePostDto } from './dtos/update-post.dto';
-import { Post } from './entities/post.entity';
 import { PostsRepository } from './repositories/posts.repository';
 
 @Injectable()
 export class PostsService {
-  constructor(
-    @InjectRepository(Post)
-    private postsRepository: PostsRepository,
-  ) {}
-  async create(post: Post): Promise<Post> {
-    return await this.postsRepository.create(post);
+  constructor(private readonly postsRepository: PostsRepository) {}
+  async create(createPostDto: CreatePostDto): Promise<CreatePostDto> {
+    return this.postsRepository.create(createPostDto);
   }
 
   findAll() {
-    return `This action returns all posts`;
+    return this.postsRepository.findAll();
   }
 
   findOne(id: number) {

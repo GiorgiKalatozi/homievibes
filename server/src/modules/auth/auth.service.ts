@@ -1,4 +1,4 @@
-import { Body, ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { UsersRepository } from '../users/repositories/users.repository';
@@ -13,7 +13,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  public async signUp(@Body() signUpDto: SignUpDto): Promise<Tokens> {
+  public async signUp(signUpDto: SignUpDto): Promise<Tokens> {
     const { email, username, password } = signUpDto;
     const hashedPassword = await this.hashData(password);
     const newUser = await this.usersRepository.create({
