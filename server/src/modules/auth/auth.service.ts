@@ -8,7 +8,6 @@ import { Tokens } from './types';
 @Injectable()
 export class AuthService {
   constructor(
-    // @InjectRepository(User)
     private readonly usersRepository: UsersRepository,
     private readonly jwtService: JwtService,
   ) {}
@@ -23,7 +22,6 @@ export class AuthService {
     });
 
     const tokens = await this.getTokens(newUser.id, newUser.email);
-    // await this.usersRepository.save(newUser);
     await this.updateRefreshToken(newUser.id, tokens.refresh_token);
     return tokens;
   }
@@ -42,7 +40,7 @@ export class AuthService {
     return tokens;
   }
 
-  public async signOut(userId: number): Promise<void> {
+  public async signOut(userId: string): Promise<void> {
     const user = await this.usersRepository.findOne(userId);
 
     user.refreshToken = null;
@@ -50,7 +48,7 @@ export class AuthService {
     await this.usersRepository.save(user);
   }
   public async refreshTokens(
-    userId: number,
+    userId: string,
     refreshToken: string,
   ): Promise<Tokens> {
     const user = await this.usersRepository.findOne(userId);
@@ -79,7 +77,7 @@ export class AuthService {
     return bcrypt.hash(data, 10);
   }
 
-  private async getTokens(userId: number, email: string): Promise<Tokens> {
+  private async getTokens(userId: string, email: string): Promise<Tokens> {
     const [accessToken, refreshToken] = await Promise.all([
       this.jwtService.signAsync(
         {
@@ -110,7 +108,7 @@ export class AuthService {
   }
 
   private async updateRefreshToken(
-    userId: number,
+    userId: string,
     refreshToken: string,
   ): Promise<void> {
     const hash = await this.hashData(refreshToken);

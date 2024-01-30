@@ -17,7 +17,7 @@ export class UsersRepository {
     return await this.usersRepository.find();
   }
 
-  public async findOne(id: number): Promise<User> {
+  public async findOne(id: string): Promise<User> {
     return await this.usersRepository.findOne({ where: { id } });
   }
 
@@ -28,7 +28,7 @@ export class UsersRepository {
     return await this.usersRepository.findOne({ where: { email: email } });
   }
 
-  public async update(id: number, user: User): Promise<User> {
+  public async update(id: string, user: User): Promise<User> {
     const userToUpdate = await this.usersRepository.findOne({ where: { id } });
     await this.usersRepository.update(id, user);
     return userToUpdate;
