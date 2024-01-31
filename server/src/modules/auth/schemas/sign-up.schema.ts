@@ -20,7 +20,7 @@ const passwordSchema = Joi.string().min(8).required().messages({
 });
 
 export const signUpSchema = Joi.object({
-  password: passwordSchema,
   username: usernameSchema,
   email: emailSchema,
+  password: passwordSchema,
 });

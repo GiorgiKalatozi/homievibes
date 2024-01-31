@@ -1,7 +1,7 @@
-import { User } from 'src/modules/users/entities/user.entity';
+import { IUser } from 'src/common/interfaces/user.interface';
 
 export class CreatePostDto {
   title: string;
   content: string;
-  user: User;
+  user: IUser;
 }

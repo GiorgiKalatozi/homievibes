@@ -26,7 +26,7 @@ export class User {
   @OneToMany(() => Comment, (comment) => comment.user)
   comments: Comment[];
 
-  @OneToMany(() => Post, (post) => post.comments)
+  @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

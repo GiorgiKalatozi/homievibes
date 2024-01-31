@@ -13,7 +13,6 @@ import { AccessTokenStrategy, RefreshTokenStrategy } from './strategies';
   providers: [
     AuthService,
     UsersService,
-    UsersService,
     AccessTokenStrategy,
     RefreshTokenStrategy,
     UsersRepository,

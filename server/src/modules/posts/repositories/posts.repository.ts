@@ -10,7 +10,7 @@ export class PostsRepository {
     @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
   ) {}
 
-  public async create(createPostDto: CreatePostDto): Promise<Post> {
+  public create(createPostDto: CreatePostDto): Post {
     return this.postsRepository.create(createPostDto);
   }
 
