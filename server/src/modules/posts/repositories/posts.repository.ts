@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersRepository } from 'src/modules/users/repositories/users.repository';
 import { Repository } from 'typeorm';
 import { CreatePostDto } from '../dtos/create-post.dto';
 import { Post } from '../entities/post.entity';
@@ -9,33 +8,16 @@ import { Post } from '../entities/post.entity';
 export class PostsRepository {
   constructor(
     @InjectRepository(Post) private readonly postsRepository: Repository<Post>,
-    private readonly usersRepository: UsersRepository,
   ) {}
 
-  public async create(
-    createPostDto: CreatePostDto,
-    userId: string,
-  ): Promise<Post> {
-    const { title, content } = createPostDto;
-
-    // Retrieve user entity from the database based on the provided user's ID
-    const existingUser = await this.usersRepository.findOne(userId);
-    if (!existingUser) {
-      // Handle case where user does not exist
-      throw new NotFoundException(`User with ID ${existingUser.id} not found`);
-    }
-
-    const newPost = this.postsRepository.create({
-      title,
-      content,
-      user: existingUser,
-    });
-    console.log('posts repository', { createPostDto });
-
-    return this.postsRepository.save(newPost);
+  public async create(createPostDto: CreatePostDto): Promise<Post> {
+    return this.postsRepository.create(createPostDto);
   }
 
-  public findAll(): Promise<Post[]> {
+  public async save(post: Post): Promise<Post> {
+    return this.postsRepository.save(post);
+  }
+  public async findAll(): Promise<Post[]> {
     return this.postsRepository.find();
   }
 

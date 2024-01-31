@@ -38,7 +38,7 @@ export class UsersRepository {
     return this.usersRepository.save(user);
   }
 
-  public async remove(id: number): Promise<void> {
+  public async remove(id: string): Promise<void> {
     const result = await this.usersRepository.delete({ id });
 
     if (result.affected === 0) {

@@ -11,7 +11,7 @@ import {
   Req,
   UsePipes,
 } from '@nestjs/common';
-import { GetCurrentUserId } from 'src/common/decorators';
+import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { JoiValidationPipe } from 'src/common/pipes/joi-validation.pipe';
 import { User } from '../users/entities/user.entity';
 import { CreatePostDto } from './dtos/create-post.dto';
@@ -19,6 +19,7 @@ import { UpdatePostDto } from './dtos/update-post.dto';
 import { Post as PostEntity } from './entities/post.entity';
 import { PostsService } from './posts.service';
 import { createPostSchema } from './schemas/create-post.schema';
+import { Request } from 'express';
 
 @Controller('posts')
 export class PostsController {
@@ -29,17 +30,18 @@ export class PostsController {
   @HttpCode(HttpStatus.CREATED)
   public create(
     @Body() createPostDto: CreatePostDto,
-    @GetCurrentUserId() userId: string,
+    @GetUser() user: User,
   ): Promise<PostEntity> {
     console.log({ createPostDto });
-    // console.log({ user });
 
-    return this.postsService.create(createPostDto, userId);
+    return this.postsService.create(createPostDto, user);
   }
 
   @Get('/user')
-  public getUser(@GetCurrentUserId() user: User): User {
-    return user;
+  public getUser(@Req() req: Request) {
+    console.log({ req });
+
+    return req.user;
   }
 
   @Get()

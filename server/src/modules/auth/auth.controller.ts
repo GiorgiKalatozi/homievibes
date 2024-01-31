@@ -24,7 +24,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
-  @Post('/local/signup')
+  @Post('/signup')
   @UsePipes(new JoiValidationPipe(signUpSchema))
   @HttpCode(HttpStatus.CREATED)
   public signUp(@Body() signUpDto: SignUpDto): Promise<Tokens> {
@@ -32,7 +32,7 @@ export class AuthController {
   }
 
   @Public()
-  @Post('/local/signin')
+  @Post('/signin')
   @UsePipes(new JoiValidationPipe(signInSchema))
   @HttpCode(HttpStatus.OK)
   public signIn(@Body() signInDto: SignInDto): Promise<Tokens> {
@@ -41,7 +41,7 @@ export class AuthController {
 
   @Post('/signout')
   @HttpCode(HttpStatus.OK)
-  public signOut(@GetCurrentUserId() userId: number): Promise<void> {
+  public signOut(@GetCurrentUserId() userId: string): Promise<void> {
     return this.authService.signOut(userId);
   }
 
@@ -50,7 +50,7 @@ export class AuthController {
   @Post('/refresh')
   @HttpCode(HttpStatus.OK)
   public refreshTokens(
-    @GetCurrentUserId() userId: number,
+    @GetCurrentUserId() userId: string,
     @GetCurrentUser('refreshToken') refreshToken: string,
   ): Promise<Tokens> {
     console.log({ refreshToken });

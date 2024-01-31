@@ -28,19 +28,19 @@ export class UsersController {
   }
 
   @Get(':id')
-  public findOne(@Param('id') id: number): Promise<User> {
+  public findOne(@Param('id') id: string): Promise<User> {
     return this.usersService.findOne(id);
   }
 
   @Patch()
   @Roles(Role.Admin)
-  public update(@Param('id') id: number, @Body() user: User): Promise<User> {
+  public update(@Param('id') id: string, @Body() user: User): Promise<User> {
     return this.update(id, user);
   }
 
   @Delete()
   @Roles(Role.Admin)
-  public remove(@Param('id') id: number): Promise<void> {
+  public remove(@Param('id') id: string): Promise<void> {
     return this.usersService.remove(id);
   }
 }
